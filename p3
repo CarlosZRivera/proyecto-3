@@ -1,0 +1,41 @@
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/books")
+public class BookController {
+
+    private List<Book> books = new ArrayList<>();
+
+    @GetMapping
+    public List<Book> getAllBooks() {
+        return books;
+    }
+
+    @PostMapping
+    public Book addBook(@RequestBody Book book) {
+        books.add(book);
+        return book;
+    }
+
+    @GetMapping("/{id}")
+    public Book getBookById(@PathVariable("id") int id) {
+        if (id >= 0 && id < books.size()) {
+            return books.get(id);
+        } else {
+            throw new IllegalArgumentException("Book not found with id: " + id);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteBook(@PathVariable("id") int id) {
+        if (id >= 0 && id < books.size()) {
+            Book removedBook = books.remove(id);
+            return "Deleted: " + removedBook.getTitle();
+        } else {
+            throw new IllegalArgumentException("Book not found with id: " + id);
+        }
+    }
+}
